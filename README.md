@@ -28,10 +28,13 @@ nuclei -t ./tên_kho_lưu_trữ -u http://mục_tiêu.com
 Cảnh báo quan trọng
 
 Chỉ sử dụng hợp pháp: Các template này chỉ được phép sử dụng trên hệ thống bạn có quyền kiểm tra. Việc sử dụng trái phép có thể vi phạm pháp luật.
+
 Trách nhiệm: Tác giả không chịu trách nhiệm đối với bất kỳ thiệt hại hoặc hành vi lạm dụng nào liên quan đến việc sử dụng các template này.
+
 Kiểm tra kỹ: Đảm bảo bạn đã xem xét kỹ các template trước khi sử dụng để tránh các vấn đề không mong muốn.
 
 
 Cảm ơn đội ngũ ProjectDiscovery vì đã phát triển Nuclei và cung cấp kho template mã nguồn mở: Nuclei Templates.
+
 Các template trong kho này được xây dựng dựa trên kinh nghiệm thực tế và nguồn cảm hứng từ cộng đồng bảo mật.
 
