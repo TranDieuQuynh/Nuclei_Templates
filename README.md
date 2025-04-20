@@ -1,4 +1,5 @@
 Bộ sưu tập Nuclei Template - Kiểm tra bảo mật mạnh mẽ
+
 Giới thiệu
 
 Chào mừng bạn đến với Bộ sưu tập Nuclei Template! Đây là tập hợp các template được thiết kế dành riêng cho công cụ Nuclei, giúp phát hiện lỗ hổng bảo mật, nhận diện công nghệ, và kiểm tra hệ thống một cách hiệu quả. Các template này được xây dựng với mục tiêu hỗ trợ các nhà nghiên cứu bảo mật và chuyên gia kiểm thử trong việc thực hiện các đánh giá an toàn, hợp pháp.
