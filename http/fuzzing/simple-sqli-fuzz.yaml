@@ -79,3 +79,4 @@ http:
         name: sqli-boolean
         dsl:
           - "status_code == 200 && contains(body, 'exists') && !contains(body_2, 'exists')"
+    matchers-condition: or
