@@ -1,6 +1,6 @@
 id: open-redirect-fuzz
 info:
-  name: Enhanced Open Redirect via Fuzzing
+  name: Open Redirect via Fuzzing
   author: trandieuquynh
   severity: medium
   description: Phat hien lo hong Open Redirect bang cach kiem tra cac tham so URL va body pho bien, ket hop cac ky thuat bypass. Lo hong nay cho phep ke tan cong chuyen huong nguoi dung den cac trang web doc hai thong qua tham so khong duoc kiem tra.
