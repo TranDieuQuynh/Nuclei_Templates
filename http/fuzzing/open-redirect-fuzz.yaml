@@ -1,0 +1,102 @@
+id: open-redirect-fuzz
+info:
+  name: Enhanced Open Redirect via Fuzzing
+  author: trandieuquynh
+  severity: medium
+  description: Phat hien lo hong Open Redirect bang cach kiem tra cac tham so URL va body pho bien, ket hop cac ky thuat bypass. Lo hong nay cho phep ke tan cong chuyen huong nguoi dung den cac trang web doc hai thong qua tham so khong duoc kiem tra.
+  reference:
+    - https://viblo.asia/p/phan-2-open-redirection-vulnerabilities-924lJdemKPM
+    - https://portswigger.net/kb/issues/00500100_open-redirection-reflected
+  tags: open_redirect, fuzzing
+
+http:
+  # Yêu cầu GET để kiểm tra tham số trong query string
+  - method: GET
+    path:
+      # Tham số phổ biến
+      - "{{BaseURL}}?redirect={{randstr}}"
+      - "{{BaseURL}}?url={{randstr}}"
+      - "{{BaseURL}}?return={{randstr}}"
+      - "{{BaseURL}}?dest={{randstr}}"
+      - "{{BaseURL}}?continue={{randstr}}"
+      - "{{BaseURL}}?target={{randstr}}"
+      - "{{BaseURL}}?rurl={{randstr}}"
+      - "{{BaseURL}}?goto={{randstr}}"
+      # Tham số ít phổ biến hơn
+      - "{{BaseURL}}?next={{randstr}}"
+      - "{{BaseURL}}?out={{randstr}}"
+      - "{{BaseURL}}?view={{randstr}}"
+      - "{{BaseURL}}?link={{randstr}}"
+      # Kỹ thuật bypass
+      - "{{BaseURL}}?redirect=//{{randstr}}"
+      - "{{BaseURL}}?redirect=https://{{randstr}}"
+      - "{{BaseURL}}?redirect={{randstr}}%0d%0a"
+      - "{{BaseURL}}?url=//{{randstr}}"
+      - "{{BaseURL}}?url=https://{{randstr}}"
+    max-redirects: 3
+    matchers-condition: or
+    matchers:
+      - type: status
+        status:
+          - 301
+          - 302
+          - 200
+      - type: word
+        words:
+          - "redirect"
+          - "url"
+          - "location"
+        part: body
+        condition: and
+
+  # Yêu cầu GET để xác minh chuyển hướng trong header Location
+  - method: GET
+    path:
+      - "{{BaseURL}}?redirect={{randstr}}"
+      - "{{BaseURL}}?url={{randstr}}"
+      - "{{BaseURL}}?return={{randstr}}"
+      - "{{BaseURL}}?dest={{randstr}}"
+      - "{{BaseURL}}?continue={{randstr}}"
+      - "{{BaseURL}}?target={{randstr}}"
+      - "{{BaseURL}}?rurl={{randstr}}"
+      - "{{BaseURL}}?goto={{randstr}}"
+      - "{{BaseURL}}?next={{randstr}}"
+      - "{{BaseURL}}?out={{randstr}}"
+      - "{{BaseURL}}?view={{randstr}}"
+      - "{{BaseURL}}?link={{randstr}}"
+      - "{{BaseURL}}?redirect=//{{randstr}}"
+      - "{{BaseURL}}?redirect=https://{{randstr}}"
+      - "{{BaseURL}}?redirect={{randstr}}%0d%0a"
+    max-redirects: 3
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 301
+          - 302
+      - type: regex
+        regex:
+          - "{{randstr}}"
+        part: header
+        name: Location
+
+  # Yêu cầu POST để kiểm tra tham số trong body
+  - method: POST
+    path:
+      - "{{BaseURL}}"
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: |
+      redirect={{randstr}}&url={{randstr}}&return={{randstr}}&dest={{randstr}}&continue={{randstr}}&target={{randstr}}&rurl={{randstr}}&goto={{randstr}}&next={{randstr}}&out={{randstr}}&view={{randstr}}&link={{randstr}}
+    max-redirects: 3
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 301
+          - 302
+      - type: regex
+        regex:
+          - "{{randstr}}"
+        part: header
+        name: Location
