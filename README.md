@@ -82,4 +82,4 @@ Dự án được truyền cảm hứng từ cộng đồng an ninh mạng và c
 Mình là sinh viên năm 3 chuyên ngành Mạng máy tính và Truyền thông dữ liệu tại Trường Đại học Công nghệ – ĐHQG Hà Nội.
 Dự án này là một phần trong quá trình tự học và thực hành kỹ năng kiểm thử bảo mật.
 
-| Nếu bạn cũng đang học, đừng ngần ngại fork dự án, góp ý hoặc kết nối cùng học hỏi nhé!
+> Nếu bạn cũng đang học, đừng ngần ngại fork dự án, góp ý hoặc kết nối cùng học hỏi nhé!
