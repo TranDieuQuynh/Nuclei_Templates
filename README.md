@@ -50,11 +50,11 @@ Edit
 nuclei -t ./ -u http://<ip-cua-metasploitable2>
 Thay <ip-cua-metasploitable2> bằng địa chỉ IP thật của máy Metasploitable 2 (ví dụ: 192.168.56.101).
 
-📁 Cấu trúc thư mục
+---
+
+## 📁 Cấu trúc thư mục
 Các template được phân loại theo dịch vụ:
 
-Copy
-Edit
 ├── ftp/
 ├── http/
 ├── mysql/
@@ -62,20 +62,24 @@ Edit
 └── telnet/
 Mỗi thư mục chứa các file .yaml mô tả lỗ hổng và phương pháp kiểm thử tương ứng.
 
-⚠️ Cảnh báo pháp lý
+## ⚠️ Cảnh báo pháp lý
 Chỉ sử dụng các template này trong môi trường bạn được phép kiểm thử.
 
 Tác giả không chịu trách nhiệm với bất kỳ hành vi lạm dụng hoặc thiệt hại nào gây ra bởi việc sử dụng sai mục đích.
 
 Nên đọc kỹ nội dung từng template trước khi sử dụng để tránh rủi ro.
 
-🙏 Ghi nhận
+---
+
+## 🙏 Ghi nhận
 Cảm ơn đội ngũ ProjectDiscovery vì đã phát triển công cụ Nuclei và chia sẻ mã nguồn mở.
 
 Dự án được truyền cảm hứng từ cộng đồng an ninh mạng và các bạn sinh viên cùng chí hướng.
 
-👨‍🎓 Về tác giả
+---
+
+## 👨‍🎓 Về tác giả
 Mình là sinh viên năm 3 chuyên ngành Mạng máy tính và Truyền thông dữ liệu tại Trường Đại học Công nghệ – ĐHQG Hà Nội.
 Dự án này là một phần trong quá trình tự học và thực hành kỹ năng kiểm thử bảo mật.
 
-Nếu bạn cũng đang học, đừng ngần ngại fork dự án, góp ý hoặc kết nối cùng học hỏi nhé!
+| Nếu bạn cũng đang học, đừng ngần ngại fork dự án, góp ý hoặc kết nối cùng học hỏi nhé!
