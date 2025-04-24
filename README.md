@@ -1,4 +1,4 @@
-🛡️ Bộ Sưu Tập Nuclei Template – Thực hành Kiểm thử Bảo mật với Metasploitable 2
+# 🛡️ Bộ Sưu Tập Nuclei Template – Thực hành Kiểm thử Bảo mật với Metasploitable 2
 
 📘 Giới thiệu
 Chào bạn!
@@ -28,10 +28,10 @@ Quyền truy cập vào môi trường lab cá nhân.
 
 ▶️ Thực hiện quét
 
-# Tải project về máy
+Tải project về máy
 git clone https://github.com/ten_nguoi_dung/ten_kho_luu_tru.git
 
-# Kiểm thử với Nuclei
+Kiểm thử với Nuclei
 nuclei -t ./ten_kho_luu_tru -u http://<ip-metasploitable>
 
 ⚠️ Lưu ý quan trọng
