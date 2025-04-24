@@ -43,8 +43,8 @@ Dự án được thực hiện với mục tiêu:
    git clone https://github.com/ten_nguoi_dung/ten_kho_luu_tru.git
    cd ten_kho_luu_tru
 Chạy quét bằng Nuclei:
-  ```bash
   nuclei -t ./ -u http://<ip-cua-metasploitable2>
+
 Thay <ip-cua-metasploitable2> bằng địa chỉ IP thật của máy Metasploitable 2 (ví dụ: 192.168.56.101).
 
 ---
