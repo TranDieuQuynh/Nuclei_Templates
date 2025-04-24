@@ -59,6 +59,8 @@ Các template được phân loại theo dịch vụ:
 └── telnet/
 Mỗi thư mục chứa các file .yaml mô tả lỗ hổng và phương pháp kiểm thử tương ứng.
 
+---
+
 ## ⚠️ Cảnh báo pháp lý
 Chỉ sử dụng các template này trong môi trường bạn được phép kiểm thử.
 
